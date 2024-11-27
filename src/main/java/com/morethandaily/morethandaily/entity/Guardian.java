@@ -2,31 +2,25 @@ package com.morethandaily.morethandaily.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "guardians")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Guardian {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String inviteCode;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    @Column
-    private Long userId; // 연결된 사용자 ID (단일 연결)
+    @Column(nullable = false)
+    private String password;
 
-    // Constructor
-    public Guardian(String name, String inviteCode) {
-        this.name = name;
-        this.inviteCode = inviteCode;
-    }
+    @Column(unique = true, nullable = false)
+    private String inviteCode; // 고유 초대 코드
 }
