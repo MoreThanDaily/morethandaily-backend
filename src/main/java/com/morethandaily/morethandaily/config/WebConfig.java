@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/") // 모든 엔드포인트에 대해
+        registry.addMapping("/**") // 모든 엔드포인트에 대해
                 .allowedOriginPatterns("*") // 와일드카드 패턴
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS"); // 허용할 HTTP 메서드
     }
