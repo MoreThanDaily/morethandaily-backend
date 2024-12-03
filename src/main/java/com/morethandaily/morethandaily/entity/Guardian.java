@@ -23,4 +23,7 @@ public class Guardian {
 
     @Column(unique = true, nullable = false)
     private String inviteCode; // 고유 초대 코드
+
+    @OneToOne(mappedBy = "guardian", cascade = CascadeType.ALL, orphanRemoval = true)
+    private User user; // 연결된 User 객체
 }

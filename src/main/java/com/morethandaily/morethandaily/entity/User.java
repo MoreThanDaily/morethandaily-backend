@@ -27,8 +27,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column
-    private Long guardianId; // 연결된 보호자의 ID
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "guardian_id") // Guardian 테이블의 ID와 매핑
+    private Guardian guardian; // 연결된 Guardian 객체
 
     public User(Long id, String name, String email, String password) {
         this.id = id;
@@ -37,7 +39,4 @@ public class User {
         this.password = password;
     }
 
-    public void setGuardianId(Long guardianId) {
-        this.guardianId = guardianId;
-    }
 }

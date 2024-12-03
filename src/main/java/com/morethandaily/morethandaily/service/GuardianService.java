@@ -1,7 +1,10 @@
 package com.morethandaily.morethandaily.service;
 
 import com.morethandaily.morethandaily.entity.Guardian;
+import com.morethandaily.morethandaily.entity.User;
 import com.morethandaily.morethandaily.repository.GuardianRepository;
+import com.morethandaily.morethandaily.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +35,7 @@ public class GuardianService {
         guardian.setName(name);
         guardian.setEmail(email);
         guardian.setPassword(passwordEncoder.encode(password));
-        guardian.setInviteCode(generateInviteCode()); // 생성된 inviteCode 설정
+        guardian.setInviteCode(inviteCode); // 생성된 inviteCode 설정
 
         return guardianRepository.save(guardian);
     }
@@ -64,8 +67,13 @@ public class GuardianService {
 
         return guardian;
     }
-    private String generateInviteCode() {
-        // UUID를 사용하여 고유 초대 코드 생성
-        return UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public User findLinkedUser(Long guardianId) {
+        // User 테이블에서 guardianId를 기준으로 연결된 사용자 조회
+        return userRepository.findByGuardianId(guardianId);
     }
 }

@@ -3,6 +3,7 @@ package com.morethandaily.morethandaily.controller;
 import com.morethandaily.morethandaily.dto.RegisterRequest;
 import com.morethandaily.morethandaily.dto.LoginRequest;
 import com.morethandaily.morethandaily.entity.Guardian;
+import com.morethandaily.morethandaily.entity.User;
 import com.morethandaily.morethandaily.service.GuardianService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,6 @@ public class GuardianController {
         }
     }
 
-
     // 보호자 로그인 API
     @PostMapping("/login")
     public ResponseEntity<?> loginGuardian(@RequestBody LoginRequest request) {
@@ -44,5 +44,14 @@ public class GuardianController {
     public ResponseEntity<String> connectGuardian(@RequestParam String inviteCode) {
         guardianService.connectGuardian(inviteCode);
         return ResponseEntity.ok("Guardian connected successfully");
+    }
+
+    @GetMapping("/linked-user/{userId}")
+    public ResponseEntity<?> getLinkedUser(@PathVariable Long userId) {
+        User linkedUser = guardianService.findLinkedUser(userId);
+        if (linkedUser == null) {
+            return ResponseEntity.ok("No linked user found for the guardian.");
+        }
+        return ResponseEntity.ok(linkedUser);
     }
 }
