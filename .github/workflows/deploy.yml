@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
   deploy:
@@ -14,22 +14,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. EC2로 파일 전송
+      # 2. EC2로 파일 전송 (SCP 사용)
       - name: Copy files to EC2
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }} # GitHub Secrets에 등록한 개인키
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp -i ~/.ssh/id_rsa -r -o StrictHostKeyChecking=no ./ ec2-user@43.203.90.24:/home/ec2-user/morethandaily
+          
+          # EC2에 프로젝트 디렉토리 생성 및 파일 전송
+          ssh -o StrictHostKeyChecking=no ec2-user@43.203.90.24 "mkdir -p /home/ec2-user/project"
+          scp -r -o StrictHostKeyChecking=no ./ ec2-user@43.203.90.24:/home/ec2-user/project/
 
       # 3. 서버에서 배포 스크립트 실행
       - name: Run deployment script on EC2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@43.203.90.24 << 'EOF'
-            cd /home/ec2-user/morethandaily
-            ./deploy.sh
+          ssh -o StrictHostKeyChecking=no ec2-user@43.203.90.24 << 'EOF'
+            cd /home/ec2-user/project
+            ./deploy.sh  # EC2에 있는 배포 스크립트 실행
           EOF
