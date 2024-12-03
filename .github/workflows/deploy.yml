@@ -22,7 +22,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp -r -o StrictHostKeyChecking=no ./ ec2-user@<EC2_PUBLIC_IP>:/home/ec2-user/app
+          scp -r -o StrictHostKeyChecking=no ./ ec2-user@43.203.90.24:/home/ec2-user/morethandaily
 
       # 3. 서버에서 배포 스크립트 실행
       - name: Run deployment script on EC2
